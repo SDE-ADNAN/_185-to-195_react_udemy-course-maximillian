@@ -238,3 +238,14 @@ export default useCounter;
 ```
 
 ---
+
+## --Video 190: Onwards to a more realistic example
+
+- here we downloaded and added the 04-onwards-to-a-more-realistic-example project
+- downloaded the dependencies for the new project
+- now from 190 to 195 all videos are done in the new project"
+- created a new project on firebase
+- created a realtime database for storing tasks data
+- we will use this get and post requests more efficiently in the App.js and taskForm.js , by creating a custom hook. that increases the reusability of our get and post requests.
+
+---
