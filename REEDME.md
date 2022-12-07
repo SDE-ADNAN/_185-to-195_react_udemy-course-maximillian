@@ -27,6 +27,28 @@ Answer: Custom hooks are functions that allow us to reuse stateful logic between
 
 ## -- Video 187 : creating a custom react hook function
 
+code form course:
+
+```JSX
+const { useState, useEffect } = require("react");
+const { default: Card } = require("../components/Card");
+
+const useCounter = () => {
+  const [counter, setCounter] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCounter((prevCounter) => prevCounter + 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+  return counter;
+};
+export default useCounter;
+
+```
+
 - create a new file in the src folder called useLocalStorage.js
 - create a function called useLocalStorage
 - create a state variable called storedValue
@@ -84,3 +106,60 @@ export const useLocalStorage = (key, initialValue) => {
 };
 
 ```
+
+---
+
+## -- Video 188 : using a custom react hook function
+
+- what happens when we use a custom hook function
+
+  - the function is called
+  - the state variables are created
+  - the useEffect hook is called
+  - the function returns the state variables and the functions
+  - the state variables and the functions are used in the component and attach to that component instance
+  - if we use the same custom hook function in another component, the state variables and the functions are created again and attached to that component instance
+
+### After using the useCounter custom hook function in the ForwardCounter.js file
+
+```JSX
+import useCounter from "../hooks/use-counter";
+
+import Card from "./Card";
+
+const ForwardCounter = () => {
+  const counter = useCounter(0);
+
+  return <Card>{counter}</Card>;
+};
+
+export default ForwardCounter;
+```
+
+before:
+
+```JSX
+import { useState, useEffect } from "react";
+
+import Card from "./Card";
+
+const ForwardCounter = () => {
+  const [counter, setCounter] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCounter((prevCounter) => prevCounter + 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return <Card>{counter}</Card>;
+};
+```
+
+### after using the useCounter our code got very clean and easy to read
+
+- watch this video to get a better understanding of how custom hooks work
+
+---
