@@ -249,3 +249,46 @@ export default useCounter;
 - we will use this get and post requests more efficiently in the App.js and taskForm.js , by creating a custom hook. that increases the reusability of our get and post requests.
 
 ---
+
+## --Video 191: Building a custom http hook
+
+- created the 1st version of our custom hook
+
+code:
+
+```JSX
+import { useState } from "react";
+
+const useHttp = (requestConfig, applydata) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
+
+  const sendRequest = async (taskText) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(requestConfig.url, {
+        method: requestConfig.method,
+        headers: requestConfig.headers,
+        body: JSON.stringify(requestConfig.body),
+      });
+
+      if (!response.ok) {
+        throw new Error("Request failed!");
+      }
+
+      const data = await response.json();
+      applydata(data);
+    } catch (err) {
+      setError(err.message || "Something went wrong!");
+    }
+    setIsLoading(false);
+  };
+  return {
+    isLoading,
+    error,
+    sendRequest,
+  };
+};
+export default useHttp;
+```
