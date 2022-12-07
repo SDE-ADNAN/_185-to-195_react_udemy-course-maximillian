@@ -1,5 +1,4 @@
-const { useState, useEffect } = require("react");
-const { default: Card } = require("../components/Card");
+import { useState, useEffect } from "react";
 
 const useCounter = () => {
   const [counter, setCounter] = useState(0);
@@ -11,5 +10,7 @@ const useCounter = () => {
 
     return () => clearInterval(interval);
   }, []);
+
+  return counter;
 };
 export default useCounter;
