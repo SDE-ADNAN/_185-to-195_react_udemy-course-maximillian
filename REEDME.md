@@ -466,3 +466,102 @@ export default App;
 ```
 
 ---
+
+## --Video 193: Adjusting the custom hook logic
+
+- here we just used the useCallback hook to avoid recreation of functions like transform tasks and fetch tasks .
+- but avoided the use of usecallback hook with help of passing the parameters of url and applydata function in the fetchdata function so that we are not needed to add every thing in dependencies array.
+
+code:
+
+for App.js where we use the useHttp custom hook
+
+```JS
+import React, { useCallback, useEffect, useState } from "react";
+
+import Tasks from "./components/Tasks/Tasks";
+import NewTask from "./components/NewTask/NewTask";
+import useHttp from "./hooks/use-http";
+
+function App() {
+  const [tasks, setTasks] = useState([]);
+
+  const { isLoading, error, sendRequest: fetchTasks } = useHttp();
+
+  useEffect(() => {
+    const transformTasks = (tasksObj) => {
+      const loadedTasks = [];
+
+      for (const taskKey in tasksObj) {
+        loadedTasks.push({ id: taskKey, text: tasksObj[taskKey].text });
+      }
+
+      setTasks(loadedTasks);
+    };
+    fetchTasks(
+      {
+        url: "https://custom-hook-todos-default-rtdb.firebaseio.com/tasks.json",
+      },
+      transformTasks
+    );
+  }, [fetchTasks]);
+
+  const taskAddHandler = (task) => {
+    setTasks((prevTasks) => prevTasks.concat(task));
+  };
+
+  return (
+    <React.Fragment>
+      <NewTask onAddTask={taskAddHandler} />
+      <Tasks
+        items={tasks}
+        loading={isLoading}
+        error={error}
+        onFetch={fetchTasks}
+      />
+    </React.Fragment>
+  );
+}
+
+export default App;
+
+```
+
+code for useHttp.js
+
+```js
+import { useCallback, useState } from "react";
+
+const useHttp = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
+
+  const sendRequest = useCallback(async (requestConfig, applydata) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(requestConfig.url, {
+        method: requestConfig.method ? requestConfig.method : "GET",
+        headers: requestConfig.headers ? requestConfig.headers : {},
+        body: requestConfig.body ? JSON.stringify(requestConfig.body) : null,
+      });
+
+      if (!response.ok) {
+        throw new Error("Request failed!");
+      }
+
+      const data = await response.json();
+      applydata(data);
+    } catch (err) {
+      setError(err.message || "Something went wrong!");
+    }
+    setIsLoading(false);
+  }, []);
+  return {
+    isLoading,
+    error,
+    sendRequest,
+  };
+};
+export default useHttp;
+```
