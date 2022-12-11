@@ -614,3 +614,11 @@ const NewTask = (props) => {
 
 export default NewTask;
 ```
+
+## --Video 195 : Module Summary
+
+You may want to compare your code to mine (e.g. to find + fix errors).
+
+For that, you find multiple code snapshots for this module here in this Github repository: https://github.com/academind/react-complete-guide-code/tree/15-building-custom-react-hooks
+
+Usage instructions can be found on the page that link is leading to.
